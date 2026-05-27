@@ -156,14 +156,22 @@ l.phi
 
 );
 
-active.Ka=
+const Ka=
 
 active.Pa/
 
 Math.max(
+0.5*
+GAMMA*
+H*
 H,
 1
 );
+
+active={
+...active,
+Ka
+};
 
 }
 
