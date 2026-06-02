@@ -226,27 +226,27 @@ Pp,
 
 H,
 
-beta:
-Number(beta),
+beta:Number(beta),
+
+delta:Number(delta),
 
 water,
 
 theory,
 
-gamma:
-GAMMA,
+gamma:GAMMA,
 
-phi:
-PHI,
+phi:PHI,
 
 layers:
 valid.map(
 l=>({
 
-depth:
-Number(
-l.depth
-)
+depth:Number(l.depth),
+
+gamma:Number(l.gamma),
+
+phi:Number(l.phi)
 
 })
 )
@@ -611,37 +611,22 @@ tab==="calc"
 <div className="grid grid-cols-2 gap-4">
 
 <div>
-토압이론 :
-{result.theory}
+토압이론 : {result.theory}
 </div>
 
 <div>
-벽 높이 :
-{result.H}
-m
+벽 높이 : {result.H} m
 </div>
 
 <div>
-단위중량 :
-{result.gamma}
-kN/m³
+단위중량 : {result.gamma} kN/m³
 </div>
 
 <div>
-내부마찰각 :
-{result.phi}
-°
+내부마찰각 : {result.phi} °
 </div>
 
 </div>
-
-</div>
-
-<div className="bg-blue-50 rounded-3xl p-8">
-
-<div className="text-2xl font-bold mb-4">
-
-① 토압계수 계산
 
 </div>
 
@@ -651,71 +636,41 @@ result.theory==="Rankine"
 
 ?
 
-<>
+<div className="space-y-6">
 
-<div>
+<div className="bg-blue-50 rounded-3xl p-8">
 
-Ka = tan²(45−φ/2)
+<div className="text-2xl font-bold mb-4">
+
+① Rankine 토압계수
 
 </div>
 
-<div className="mt-4">
+<div>
 
-Ka
+Ka = tan²(45 − φ/2)
 
-=
+</div>
 
-tan²(
+<div>
 
-45−
-
-{result.phi}
-
-/2
-
+Ka = tan²(
+45 − {result.phi}/2
 )
 
 </div>
 
-</>
-
-:
-
-<>
-
 <div>
 
-Coulomb 적용
+Ka = tan²(
+{45-result.phi/2}
+)
 
 </div>
 
-<div>
+<div className="font-bold text-xl mt-4">
 
-배면경사 + 벽마찰 고려
-
-</div>
-
-</>
-
-}
-
-<div className="mt-4">
-
-Ka
-
-=
-
-{result.Ka.toFixed(4)}
-
-</div>
-
-<div>
-
-Kp
-
-=
-
-{result.Kp.toFixed(4)}
+Ka = {result.Ka.toFixed(4)}
 
 </div>
 
@@ -725,7 +680,7 @@ Kp
 
 <div className="text-2xl font-bold mb-4">
 
-② 수직응력 계산
+② 수직응력
 
 </div>
 
@@ -735,30 +690,23 @@ Kp
 
 </div>
 
-<div className="mt-3">
+<div>
 
-σv
-
-=
-
+σv =
 {result.gamma}
-
 ×
-
 {result.H}
 
 </div>
 
 <div className="font-bold mt-4">
 
-σv
-
-=
-
-(
+σv =
+{(
 result.gamma*
 result.H
 ).toFixed(2)
+}
 
 kPa
 
@@ -770,82 +718,31 @@ kPa
 
 <div className="text-2xl font-bold mb-4">
 
-③ 수평응력 계산
+③ 주동합력
 
 </div>
 
 <div>
 
-σh = Kaσv
+Pa = ½KaγH²
 
 </div>
 
-<div className="mt-3">
+<div>
 
-σh
-
-=
-
-{result.Ka.toFixed(3)}
-
+Pa =
+0.5 ×
+{result.Ka.toFixed(4)}
 ×
-
-{(
-result.gamma*
-result.H
-).toFixed(2)
-}
+{result.gamma}
+×
+{result.H}²
 
 </div>
 
 <div className="font-bold mt-4">
 
-σh
-
-=
-
-(
-result.Ka*
-result.gamma*
-result.H
-).toFixed(2)
-
-kPa
-
-</div>
-
-</div>
-
-<div className="bg-red-100 rounded-3xl p-8">
-
-<div className="text-2xl font-bold mb-4">
-
-④ 주동합력 적분
-
-</div>
-
-<div>
-
-Pa = ∫σh dz
-
-</div>
-
-<div className="mt-3">
-
-Pa
-
-=
-
-½KaγH²
-
-</div>
-
-<div className="font-bold mt-4">
-
-Pa
-
-=
-
+Pa =
 {result.Pa.toFixed(2)}
 
 kN/m
@@ -854,11 +751,24 @@ kN/m
 
 </div>
 
-<div className="bg-green-100 rounded-3xl p-8">
+<div className="bg-green-50 rounded-3xl p-8">
 
 <div className="text-2xl font-bold mb-4">
 
-⑤ 수동합력 계산
+④ 수동합력
+
+</div>
+
+<div>
+
+Kp = 1 / Ka
+
+</div>
+
+<div>
+
+Kp =
+{result.Kp.toFixed(4)}
 
 </div>
 
@@ -868,12 +778,9 @@ Pp = ½KpγH²
 
 </div>
 
-<div className="mt-4">
+<div className="font-bold mt-4">
 
-Pp
-
-=
-
+Pp =
 {result.Pp.toFixed(2)}
 
 kN/m
@@ -882,52 +789,211 @@ kN/m
 
 </div>
 
-{
+</div>
 
-result.layers?.length>1
+:
 
-&&
+<div className="space-y-6">
+
+<div className="bg-blue-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+① 입력값
+
+</div>
+
+<div>
+
+φ = {result.phi}°
+
+</div>
+
+<div>
+
+β = {result.beta}°
+
+</div>
+
+<div>
+
+δ = {result.delta}°
+
+</div>
+
+</div>
+
+<div className="bg-indigo-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+② 분자 계산
+
+</div>
+
+<div>
+
+cos²(φ−β)
+
+</div>
+
+<div>
+
+cos²(
+{result.phi}
+-
+{result.beta}
+)
+
+</div>
+
+<div className="font-bold mt-4">
+
+=
+{result.numerator?.toFixed(6)}
+
+</div>
+
+</div>
+
+<div className="bg-purple-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+③ 루트항 계산
+
+</div>
+
+<div>
+
+√[
+sin(φ+δ)
+sin(φ−β)
+/
+(
+cos(δ+β)
+cosβ
+)
+]
+
+</div>
+
+<div className="font-bold mt-4">
+
+=
+{result.root?.toFixed(6)}
+
+</div>
+
+</div>
+
+<div className="bg-pink-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+④ 분모 계산
+
+</div>
+
+<div>
+
+cos²β
+×
+cos(δ+β)
+×
+(1+Root)²
+
+</div>
+
+<div className="font-bold mt-4">
+
+=
+{result.denominator?.toFixed(6)}
+
+</div>
+
+</div>
+
+<div className="bg-red-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+⑤ Coulomb Ka 계산
+
+</div>
+
+<div>
+
+Ka =
+분자 / 분모
+
+</div>
+
+<div>
+
+=
+{result.numerator?.toFixed(6)}
+/
+{result.denominator?.toFixed(6)}
+
+</div>
+
+<div className="font-bold mt-4">
+
+Ka =
+{result.Ka.toFixed(6)}
+
+</div>
+
+</div>
 
 <div className="bg-orange-50 rounded-3xl p-8">
 
-<div className="text-2xl font-bold mb-6">
+<div className="text-2xl font-bold mb-4">
 
-⑥ 다층 적분 계산
-
-</div>
-
-{
-
-result.layers.map(
-(
-layer:any,
-i:number
-)=>
-
-<div
-key={i}
-className="mb-4"
->
-
-층
-{i+1}
-
-↓
-
-h=
-{layer.depth}
-
-m
+⑥ 주동합력
 
 </div>
 
-)
+<div>
 
-}
+Pa = ½KaγH²
 
-<div className="font-bold">
+</div>
 
-누적 유효응력 적용
+<div className="font-bold mt-4">
+
+Pa =
+{result.Pa.toFixed(2)}
+
+kN/m
+
+</div>
+
+</div>
+
+<div className="bg-green-50 rounded-3xl p-8">
+
+<div className="text-2xl font-bold mb-4">
+
+⑦ 수동합력
+
+</div>
+
+<div>
+
+Pp = ½KpγH²
+
+</div>
+
+<div className="font-bold mt-4">
+
+Pp =
+{result.Pp.toFixed(2)}
+
+kN/m
+
+</div>
 
 </div>
 
@@ -939,24 +1005,20 @@ m
 
 <div className="text-2xl font-bold mb-4">
 
-⑦ 합력 작용점
+최종 작용점
 
 </div>
 
 <div>
 
-ȳ = M / Pa
+y = H / 3
 
 </div>
 
-<div className="mt-4">
+<div className="font-bold mt-4">
 
-y
-
-=
-
+y =
 {result.y.toFixed(2)}
-
 m
 
 </div>

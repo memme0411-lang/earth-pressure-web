@@ -24,21 +24,7 @@ Math.cos(
 PHI-BETA
 )**2;
 
-const denominator=
-
-Math.cos(BETA)**2
-
-*
-
-Math.cos(
-DELTA+BETA
-)
-
-*
-
-(
-
-1+
+const root=
 
 Math.sqrt(
 
@@ -71,8 +57,25 @@ BETA
 
 )
 
+);
+
+const denominator=
+
+Math.cos(
+BETA
+)**2
+
+*
+
+Math.cos(
+DELTA+BETA
 )
 
+*
+
+(
+1+
+root
 )**2;
 
 const Ka=
@@ -95,7 +98,19 @@ Ka,
 Pa,
 
 y:
-H/3
+H/3,
+
+numerator,
+
+denominator,
+
+root,
+
+phi,
+
+beta,
+
+delta
 
 };
 
