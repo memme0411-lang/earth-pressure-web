@@ -33,7 +33,8 @@ const [gamma,setGamma]=useState("");
 const [phi,setPhi]=useState("");
 
 const [water,setWater]=useState(false);
-
+const [waterDepth,setWaterDepth]=
+useState("");
 const [layers,setLayers]=
 useState<Layer[]>([
 {
@@ -105,10 +106,7 @@ const PHI=
 Number(phi);
 
 let GAMMA=
-applyWater(
-Number(gamma),
-water
-);
+Number(gamma);
 
 let active;
 
@@ -186,7 +184,8 @@ theory==="Rankine"
 calcRankine(
 H,
 PHI,
-GAMMA
+GAMMA,
+Number(beta)
 )
 
 :
@@ -215,7 +214,39 @@ Kp*
 GAMMA*
 H*
 H;
+let Pw=0;
 
+let yw=0;
+
+if(
+water
+&&
+waterDepth
+){
+
+const wd=
+Number(
+waterDepth
+);
+
+const hw=
+
+Math.max(
+H-wd,
+0
+);
+
+Pw=
+
+0.5*
+1.0*
+hw*
+hw;
+
+yw=
+hw/3;
+
+}
 setResult({
 
 ...active,
@@ -494,7 +525,21 @@ p-3
 </button>
 
 </div>
-
+<input
+placeholder="지하수면 깊이"
+value={waterDepth}
+onChange={(e)=>
+setWaterDepth(
+e.target.value
+)
+}
+className="
+border
+rounded-xl
+p-3
+w-full
+"
+/>
 <label className="flex gap-2">
 
 <input
